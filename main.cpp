@@ -6,6 +6,7 @@
 
 using namespace std;
 
+//process structure
 struct processModel
 {
     int burst_time;
@@ -13,6 +14,7 @@ struct processModel
     int priority;
 };
 
+//validator
 int Validator(int option, int startLimit, int endLimit)
 {
     if ((option <= startLimit || option <= endLimit) && (option != 0))
@@ -27,15 +29,21 @@ int Validator(int option, int startLimit, int endLimit)
     }
 }
 
+//main
 int main()
 {
     int i = 0;
     int count;
+    int option;
+    bool validate = true;
+
     string data;
     string burst_time, arrival, priority;
-
     ifstream input("input.txt");
     ifstream input2("input.txt");
+
+    //To know the length of lines of the file
+    //number of lines in file = lenth of the array of struct
 
     if (!input.eof())
     {
@@ -43,14 +51,13 @@ int main()
         count = data.length();
     }
 
-    cout << count;
+    struct processModel pd[count];
 
+
+    //assigning values to structure processModel
     while (!input.eof())
     {
         getline(input, data);
-
-        //number of lines in file = lenth of the array of struct
-        struct processModel pd[data.length()];
 
         //assigning strings
         burst_time = data[0];
@@ -64,9 +71,6 @@ int main()
 
         i++;
     }
-
-    int option;
-    bool validate = true;
 
     //Ask user to input method
     do
