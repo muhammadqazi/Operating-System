@@ -30,13 +30,20 @@ int Validator(int option, int startLimit, int endLimit)
 int main()
 {
     int i = 0;
-    int count = 0;
-
+    int count;
     string data;
+    string burst_time, arrival, priority;
+
     ifstream input("input.txt");
     ifstream input2("input.txt");
 
-    string burst_time, arrival, priority;
+    if (!input.eof())
+    {
+        getline(input2, data);
+        count = data.length();
+    }
+
+    cout << count;
 
     while (!input.eof())
     {
@@ -55,14 +62,12 @@ int main()
         pd[i].arrival = stoi(arrival);
         pd[i].priority = stoi(priority);
 
-
-
-        
+        i++;
     }
-
 
     int option;
     bool validate = true;
+
     //Ask user to input method
     do
     {
