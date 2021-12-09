@@ -6,12 +6,12 @@
 
 using namespace std;
 
-struct processModel{
+struct processModel
+{
     int burst_time;
     int arrival;
     int priority;
 };
-
 
 int Validator(int option, int startLimit, int endLimit)
 {
@@ -29,32 +29,37 @@ int Validator(int option, int startLimit, int endLimit)
 
 int main()
 {
+    int i = 0;
+    int count = 0;
 
     string data;
     ifstream input("input.txt");
+    ifstream input2("input.txt");
 
-    string burst_time , arrival , priority;
+    string burst_time, arrival, priority;
 
-    struct processModel pd;
-
-    int i;
-    int count = 0;
-    
-    if (input.is_open())
+    while (!input.eof())
     {
-        getline(input,data);
-        while (input >> burst_time >> arrival >> priority)
-        {
-           pd.burst_time = stoi(burst_time);
-           pd.arrival = stoi(arrival);
-           pd.priority = stoi(priority);
+        getline(input, data);
 
-        }
-        count++;
+        //number of lines in file = lenth of the array of struct
+        struct processModel pd[data.length()];
+
+        //assigning strings
+        burst_time = data[0];
+        arrival = data[2];
+        priority = data[4];
+
+        //assigning int data
+        pd[i].burst_time = stoi(burst_time);
+        pd[i].arrival = stoi(arrival);
+        pd[i].priority = stoi(priority);
+
+
+
+        
     }
 
-    count<< count;
-    
 
     int option;
     bool validate = true;
