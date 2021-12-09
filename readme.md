@@ -14,4 +14,9 @@ gcc main.cpp -o main
 ./main
 ```
 
-Input.txt
+**Input.txt
+
+Input file data should be in the following format :
+
+burst_time:arrival_time:priority
+ex: 5:0:127
