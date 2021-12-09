@@ -18,5 +18,4 @@ gcc main.cpp -o main
 
 Input file data should be in the following format :
 
-burst_time:arrival_time:priority
-ex: 5:0:127
+```bursty_time : arrival_time : priority ```
