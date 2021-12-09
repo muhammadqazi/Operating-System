@@ -1,8 +1,17 @@
 
 #include <iostream>
 #include <limits>
+#include <fstream>
+#include <string>
 
 using namespace std;
+
+struct processModel{
+    int burst_time;
+    int arrival;
+    int priority;
+};
+
 
 int Validator(int option, int startLimit, int endLimit)
 {
@@ -21,8 +30,33 @@ int Validator(int option, int startLimit, int endLimit)
 int main()
 {
 
+    string data;
+    ifstream input("input.txt");
+
+    string burst_time , arrival , priority;
+
+    struct processModel pd;
+
+    int i;
+    int count = 0;
+    
+    if (input.is_open())
+    {
+        getline(input,data);
+        while (input >> burst_time >> arrival >> priority)
+        {
+           pd.burst_time = stoi(burst_time);
+           pd.arrival = stoi(arrival);
+           pd.priority = stoi(priority);
+
+        }
+        count++;
+    }
+
+    count<< count;
+    
+
     int option;
-    bool validate2;
     bool validate = true;
     //Ask user to input method
     do
