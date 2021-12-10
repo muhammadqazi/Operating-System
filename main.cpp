@@ -29,8 +29,42 @@ int Validator(int option, int startLimit, int endLimit)
     }
 }
 
-void sortController(){
-    
+//sort helper
+
+void sortHelper(int count)
+{
+    int i;
+    int arr[count];
+    //array filling with numbers of processes
+    for (i = 0; i < count; i++)
+    {
+        arr[i] = count - i;
+    }
+    //sorting in order
+    for (i = 0; i < count; i++)
+    {
+        for (i = 0; i < count - 1; i++)
+        {
+
+            for (int j = 0; j < count - 1; j++)
+            {
+                if (arr[j] > arr[j + 1])
+                {
+
+                    int temp = arr[j];
+
+                    arr[j] = arr[j + 1];
+
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+    //process name
+    for (i = 0; i < count; i++)
+    {
+        cout << "Waiting time for process " << arr[i] << " ms" << endl;
+    }
 }
 
 //main
@@ -73,15 +107,13 @@ int main()
         pd[i].priority = stoi(priority);
 
         i++;
-
     }
 
-   
     //sort array according to arrival time
-    for (i = 0; i < count-1; i++)
+    for (i = 0; i < count - 1; i++)
     {
 
-        for (int j = 0; j < count-1; j++)
+        for (int j = 0; j < count - 1; j++)
         {
             if ((pd[j].arrival) > (pd[j + 1].arrival))
             {
@@ -91,19 +123,9 @@ int main()
                 pd[j].arrival = pd[j + 1].arrival;
 
                 pd[j + 1].arrival = temp;
-                
             }
         }
     }
-
-    for (i = 0; i < count; i++)
-    {
-        cout<<pd[i].arrival;
-    }
-
-    
-
-    
 
     //Ask user to input method
     do
@@ -158,10 +180,46 @@ int main()
                         {
                             cout << "\nSelected option " << option;
                         }
+
                         // 2)
                         else if (option == 2)
                         {
-                            cout << "\nSelected option " << option;
+                            int i;
+                            int arr[count];
+                            //array filling with numbers of processes
+                            for (i = 0; i < count; i++)
+                            {
+                                arr[i] = count - i;
+                            }
+                            //sorting in order
+                            for (i = 0; i < count; i++)
+                            {
+                                for (i = 0; i < count - 1; i++)
+                                {
+
+                                    for (int j = 0; j < count - 1; j++)
+                                    {
+                                        if (arr[j] > arr[j + 1])
+                                        {
+
+                                            int temp = arr[j];
+
+                                            arr[j] = arr[j + 1];
+
+                                            arr[j + 1] = temp;
+                                        }
+                                    }
+                                }
+                            }
+                            //process name
+                            cout << "Waiting time for process " << 1 << " is 0 ms" << endl;
+                            int waitTime[count];
+                            for (i = 1; i < count; i++)
+                            {
+                                waitTime[i] = 0;
+                                waitTime[i] += pd[i].burst_time;
+                                cout << "Waiting time for process " << arr[i] << " is " << waitTime[i] << " ms" << endl;
+                            }
                         }
                         // 3)
                         else if (option == 3)
