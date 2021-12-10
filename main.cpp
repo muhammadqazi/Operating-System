@@ -29,6 +29,10 @@ int Validator(int option, int startLimit, int endLimit)
     }
 }
 
+void sortController(){
+    
+}
+
 //main
 int main()
 {
@@ -51,8 +55,7 @@ int main()
         count = data.length();
     }
 
-    struct processModel pd[count];
-
+    struct processModel pd[count - 1];
 
     //assigning values to structure processModel
     while (!input.eof())
@@ -70,7 +73,37 @@ int main()
         pd[i].priority = stoi(priority);
 
         i++;
+
     }
+
+   
+    //sort array according to arrival time
+    for (i = 0; i < count-1; i++)
+    {
+
+        for (int j = 0; j < count-1; j++)
+        {
+            if ((pd[j].arrival) > (pd[j + 1].arrival))
+            {
+
+                int temp = pd[j].arrival;
+
+                pd[j].arrival = pd[j + 1].arrival;
+
+                pd[j + 1].arrival = temp;
+                
+            }
+        }
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        cout<<pd[i].arrival;
+    }
+
+    
+
+    
 
     //Ask user to input method
     do
