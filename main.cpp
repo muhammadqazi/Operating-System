@@ -216,8 +216,8 @@ int main()
                             int waitTime[count];
                             for (i = 1; i < count; i++)
                             {
-                                waitTime[i] = 0;
-                                waitTime[i] += pd[i].burst_time;
+                                // waitTime[i] = 0;
+                                waitTime[i] = pd[i-1].burst_time + waitTime[i-1];
                                 cout << "Waiting time for process " << arr[i] << " is " << waitTime[i] << " ms" << endl;
                             }
                         }
