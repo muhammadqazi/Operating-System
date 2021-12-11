@@ -3,6 +3,7 @@
 #include <limits>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -188,16 +189,27 @@ int main()
         arrival = data[2];
         priority = data[4];
 
+        int burst, arrival2, prior;
+
+        stringstream burstTime;
+        burstTime << burst_time;
+        burstTime >> burst;
+
+        stringstream arrivalTime;
+        arrivalTime << arrival;
+        arrivalTime >> arrival2;
+
+        stringstream priorityValue;
+        priorityValue << priority;
+        priorityValue >> prior;
+
         //assigning int data
-        pd[i].burst_time = stoi(burst_time);
-        pd[i].arrival = stoi(arrival);
-        pd[i].priority = stoi(priority);
+        pd[i].burst_time = burst;
+        pd[i].arrival = arrival2;
+        pd[i].priority = prior;
 
         i++;
     }
-
-    //sort array according to arrival time
-    //sorting the whole structure according to arrival time
 
     //Ask user to input method
     do
@@ -210,7 +222,8 @@ int main()
         cout << "\n 1) Scheduling Method (None)" << endl;
         cout << "\n 2) Preemptive Mode (Off)" << endl;
         cout << "\n 3) Show Result" << endl;
-        cout << "\n 4) End Program" << endl;
+        cout << "\n 4) End Program\n"
+             << endl;
 
         cout << "Option> ";
 
@@ -234,7 +247,8 @@ int main()
                     cout << "\n 2) First Come, First Served Scheduling" << endl;
                     cout << "\n 3) Shortest-Job-First Scheduling" << endl;
                     cout << "\n 4) Priority Scheduling" << endl;
-                    cout << "\n 5) Round-Robin Scheduling" << endl;
+                    cout << "\n 5) Round-Robin Scheduling\n"
+                         << endl;
 
                     cout << "Option> ";
 
@@ -297,7 +311,8 @@ int main()
             // 4)
             else if (option == 4)
             {
-                cout << "\nSelected option " << option;
+                cout << "Program is terminated sucessfully";
+                break;
             }
         }
 
