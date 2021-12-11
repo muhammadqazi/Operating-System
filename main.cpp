@@ -66,33 +66,9 @@ void FCFScontroller(processModel *pd, int count)
     int i;
     int arr[count];
 
+    //this will return a pointer for the array starting
     int *number = sortHandler(count, arr);
-    cout<<*number;
-    //array filling with numbers of processes
-    // for (i = 0; i < count; i++)
-    // {
-    //     arr[i] = count - i;
-    // }
-    // //sorting in order
-    // for (i = 0; i < count; i++)
-    // {
-    //     for (i = 0; i < count - 1; i++)
-    //     {
 
-    //         for (int j = 0; j < count - 1; j++)
-    //         {
-    //             if (arr[j] > arr[j + 1])
-    //             {
-
-    //                 int temp = arr[j];
-
-    //                 arr[j] = arr[j + 1];
-
-    //                 arr[j + 1] = temp;
-    //             }
-    //         }
-    //     }
-    // }
     //process name
     cout << "Waiting time for process " << 1 << " is 0 ms" << endl;
     int waitTime[count];
@@ -148,6 +124,7 @@ int main()
     }
 
     //sort array according to arrival time
+    //sorting the whole structure according to arrival time
     for (i = 0; i < count - 1; i++)
     {
 
@@ -161,10 +138,27 @@ int main()
                 pd[j].arrival = pd[j + 1].arrival;
 
                 pd[j + 1].arrival = temp;
+
+                int burst = pd[j].burst_time;
+
+                pd[j].burst_time = pd[j + 1].burst_time;
+
+                pd[j + 1].burst_time = burst;
+
+                int prior = pd[j].priority;
+
+                pd[j].priority = pd[j + 1].priority;
+
+                pd[j + 1].priority = prior;
             }
         }
     }
-
+    for (i = 0; i < count; i++)
+    {
+        cout << pd[i].arrival;
+        cout << "s ";
+        cout << pd[i].burst_time;
+    }
     //Ask user to input method
     do
     {
@@ -224,43 +218,6 @@ int main()
                         {
 
                             FCFScontroller(pd, count);
-                            // int i;
-                            // int arr[count];
-                            // //array filling with numbers of processes
-                            // for (i = 0; i < count; i++)
-                            // {
-                            //     arr[i] = count - i;
-                            // }
-                            // //sorting in order
-                            // for (i = 0; i < count; i++)
-                            // {
-                            //     for (i = 0; i < count - 1; i++)
-                            //     {
-
-                            //         for (int j = 0; j < count - 1; j++)
-                            //         {
-                            //             if (arr[j] > arr[j + 1])
-                            //             {
-
-                            //                 int temp = arr[j];
-
-                            //                 arr[j] = arr[j + 1];
-
-                            //                 arr[j + 1] = temp;
-                            //             }
-                            //         }
-                            //     }
-                            // }
-                            // //process name
-                            // cout << "Waiting time for process " << 1 << " is 0 ms" << endl;
-                            // int waitTime[count];
-                            // waitTime[0] = 0;
-                            // for (i = 1; i < count; i++)
-                            // {
-
-                            //     waitTime[i] = pd[i - 1].burst_time + waitTime[i - 1];
-                            //     cout << "Waiting time for process " << arr[i] << " is " << waitTime[i] << " ms" << endl;
-                            // }
                         }
                         // 3)
                         else if (option == 3)
