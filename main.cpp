@@ -29,13 +29,10 @@ int Validator(int option, int startLimit, int endLimit)
     }
 }
 
-//sort helper
-
-void FCFScontroller(processModel *pd,int count)
+int *sortHandler(int count, int arr[])
 {
     int i;
-    int arr[count];
-    //array filling with numbers of processes
+
     for (i = 0; i < count; i++)
     {
         arr[i] = count - i;
@@ -60,6 +57,42 @@ void FCFScontroller(processModel *pd,int count)
             }
         }
     }
+    return arr;
+}
+
+//First come first server Controller
+void FCFScontroller(processModel *pd, int count)
+{
+    int i;
+    int arr[count];
+
+    int *number = sortHandler(count, arr);
+    cout<<*number;
+    //array filling with numbers of processes
+    // for (i = 0; i < count; i++)
+    // {
+    //     arr[i] = count - i;
+    // }
+    // //sorting in order
+    // for (i = 0; i < count; i++)
+    // {
+    //     for (i = 0; i < count - 1; i++)
+    //     {
+
+    //         for (int j = 0; j < count - 1; j++)
+    //         {
+    //             if (arr[j] > arr[j + 1])
+    //             {
+
+    //                 int temp = arr[j];
+
+    //                 arr[j] = arr[j + 1];
+
+    //                 arr[j + 1] = temp;
+    //             }
+    //         }
+    //     }
+    // }
     //process name
     cout << "Waiting time for process " << 1 << " is 0 ms" << endl;
     int waitTime[count];
@@ -68,7 +101,7 @@ void FCFScontroller(processModel *pd,int count)
     {
 
         waitTime[i] = pd[i - 1].burst_time + waitTime[i - 1];
-        cout << "Waiting time for process " << arr[i] << " is " << waitTime[i] << " ms" << endl;
+        cout << "Waiting time for process " << *(number + i) << " is " << waitTime[i] << " ms" << endl;
     }
 }
 
@@ -190,7 +223,7 @@ int main()
                         else if (option == 2)
                         {
 
-                            FCFScontroller(pd,count);
+                            FCFScontroller(pd, count);
                             // int i;
                             // int arr[count];
                             // //array filling with numbers of processes
