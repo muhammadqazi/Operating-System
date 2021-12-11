@@ -60,8 +60,78 @@ int *sortHandler(int count, int arr[])
     return arr;
 }
 
-//First come first server Controller
-void FCFScontroller(processModel *pd, int count)
+//struct sort handler if its 1 then according to arrival time if its 2 then according to burstTime if its 3 then according to priority
+void structSortHandler(processModel *pd, int count, int method)
+{
+    //sort array according to arrivalTime
+    if (method == 1)
+    {
+        for (int i = 0; i < count - 1; i++)
+        {
+
+            for (int j = 0; j < count - 1; j++)
+            {
+                if ((pd[j].arrival) > (pd[j + 1].arrival))
+                {
+
+                    int temp = pd[j].arrival;
+
+                    pd[j].arrival = pd[j + 1].arrival;
+
+                    pd[j + 1].arrival = temp;
+
+                    int burst = pd[j].burst_time;
+
+                    pd[j].burst_time = pd[j + 1].burst_time;
+
+                    pd[j + 1].burst_time = burst;
+
+                    int prior = pd[j].priority;
+
+                    pd[j].priority = pd[j + 1].priority;
+
+                    pd[j + 1].priority = prior;
+                }
+            }
+        }
+    }
+    //sort array according to burstTime
+    else if (method == 2)
+    {
+
+        for (int i = 0; i < count - 1; i++)
+        {
+
+            for (int j = 0; j < count - 1; j++)
+            {
+                if ((pd[j].burst_time) > (pd[j + 1].burst_time))
+                {
+
+                    int burst = pd[j].burst_time;
+
+                    pd[j].burst_time = pd[j + 1].burst_time;
+
+                    pd[j + 1].burst_time = burst;
+
+                    int temp = pd[j].arrival;
+
+                    pd[j].arrival = pd[j + 1].arrival;
+
+                    pd[j + 1].arrival = temp;
+
+                    int prior = pd[j].priority;
+
+                    pd[j].priority = pd[j + 1].priority;
+
+                    pd[j + 1].priority = prior;
+                }
+            }
+        }
+    }
+}
+
+//Scheduler Method Controller
+void SchedulerController(processModel *pd, int count)
 {
     int i;
     int arr[count];
@@ -73,12 +143,15 @@ void FCFScontroller(processModel *pd, int count)
     cout << "Waiting time for process " << 1 << " is 0 ms" << endl;
     int waitTime[count];
     waitTime[0] = 0;
+    double averageWait;
     for (i = 1; i < count; i++)
     {
 
         waitTime[i] = pd[i - 1].burst_time + waitTime[i - 1];
         cout << "Waiting time for process " << *(number + i) << " is " << waitTime[i] << " ms" << endl;
+        averageWait += waitTime[i];
     }
+    cout << "Average waiting time is " << averageWait / count;
 }
 
 //main
@@ -125,40 +198,7 @@ int main()
 
     //sort array according to arrival time
     //sorting the whole structure according to arrival time
-    for (i = 0; i < count - 1; i++)
-    {
 
-        for (int j = 0; j < count - 1; j++)
-        {
-            if ((pd[j].arrival) > (pd[j + 1].arrival))
-            {
-
-                int temp = pd[j].arrival;
-
-                pd[j].arrival = pd[j + 1].arrival;
-
-                pd[j + 1].arrival = temp;
-
-                int burst = pd[j].burst_time;
-
-                pd[j].burst_time = pd[j + 1].burst_time;
-
-                pd[j + 1].burst_time = burst;
-
-                int prior = pd[j].priority;
-
-                pd[j].priority = pd[j + 1].priority;
-
-                pd[j + 1].priority = prior;
-            }
-        }
-    }
-    for (i = 0; i < count; i++)
-    {
-        cout << pd[i].arrival;
-        cout << "s ";
-        cout << pd[i].burst_time;
-    }
     //Ask user to input method
     do
     {
@@ -217,12 +257,17 @@ int main()
                         else if (option == 2)
                         {
 
-                            FCFScontroller(pd, count);
+                            structSortHandler(pd, count, 1);
+
+                            SchedulerController(pd, count);
                         }
                         // 3)
                         else if (option == 3)
                         {
-                            cout << "\nSelected option " << option;
+
+                            structSortHandler(pd, count, 2);
+
+                            SchedulerController(pd, count);
                         }
                         // 4)
                         else if (option == 4)
