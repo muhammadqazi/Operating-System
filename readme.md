@@ -6,6 +6,8 @@ Program that simulates the service of jobs (process) by the CPU of a multi-user 
 
 
 ## Setup
+
+For some machines it needs sudo permission
 ```
 g++ main.cpp -o main
 ```
