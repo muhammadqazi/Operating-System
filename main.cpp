@@ -129,6 +129,45 @@ void structSortHandler(processModel *pd, int count, int method)
             }
         }
     }
+    //sort array according to priority (decending order) greater the number greater is the priority
+    else if (method == 3)
+    {
+
+        for (int i = 0; i < count - 1; i++)
+        {
+
+            for (int j = 0; j < count - 1; j++)
+            {
+                if ((pd[j].priority) < (pd[j + 1].priority))
+                {
+
+                    int prior = pd[j].priority;
+
+                    pd[j].priority = pd[j + 1].priority;
+
+                    pd[j + 1].priority = prior;
+
+                    int burst = pd[j].burst_time;
+
+                    pd[j].burst_time = pd[j + 1].burst_time;
+
+                    pd[j + 1].burst_time = burst;
+
+                    int temp = pd[j].arrival;
+
+                    pd[j].arrival = pd[j + 1].arrival;
+
+                    pd[j + 1].arrival = temp;
+                }
+            }
+        }
+
+        for (int i = 0; i < count - 1; i++)
+        {
+            cout<<pd[i].priority;
+        }
+
+    }
 }
 
 //Scheduler Method Controller
@@ -286,7 +325,9 @@ int main()
                         // 4)
                         else if (option == 4)
                         {
-                            cout << "\nSelected option " << option;
+                            structSortHandler(pd, count, 3);
+
+                            SchedulerController(pd, count);
                         }
                         // 5)
                         else if (option == 5)
