@@ -15,19 +15,6 @@ struct processModel
     int priority;
 };
 
-//it will give flase for charachter data
-int validateTime(int time)
-{
-    if (time != 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 //validator
 int Validator(int option, int startLimit, int endLimit)
 {
@@ -106,10 +93,13 @@ void RRScontroller(int count, int burst_time[], int wait_time[], int timeQ)
             break;
     } while (true);
 
+    double averageWait;
     for (int i = 0; i < count; i++)
     {
         cout << "Waiting time for " << (i + 1) << " is " << wait_time[i] << endl;
+        averageWait += wait_time[i];
     }
+    cout << "Average waiting time is " << averageWait / count;
 }
 
 int *sortHandler(int count, int arr[])
@@ -260,14 +250,19 @@ void SchedulerController(processModel *pd, int count)
     int waitTime[count];
     waitTime[0] = 0;
     double averageWait;
+    ofstream myfile;
+    myfile.open("output.txt");
     for (i = 1; i < count; i++)
     {
 
         waitTime[i] = pd[i - 1].burst_time + waitTime[i - 1];
         cout << "Waiting time for process " << *(number + i) << " is " << waitTime[i] << " ms" << endl;
         averageWait += waitTime[i];
+
+        myfile << "Waiting time for process " << *(number + i) << " is " << waitTime[i] << " ms" << endl;
     }
     cout << "Average waiting time is " << averageWait / count;
+    myfile.close();
 }
 
 //main
