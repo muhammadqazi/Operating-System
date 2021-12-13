@@ -15,6 +15,19 @@ struct processModel
     int priority;
 };
 
+//it will give flase for charachter data
+int validateTime(int time)
+{
+    if (time != 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 //validator
 int Validator(int option, int startLimit, int endLimit)
 {
@@ -27,6 +40,75 @@ int Validator(int option, int startLimit, int endLimit)
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         return false;
+    }
+}
+
+int timeValidator(int time)
+{
+    if (time == 0)
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+//Round Robin Scheduler
+void RRScontroller(int count, int burst_time[], int wait_time[], int timeQ)
+{
+
+    int time_remaining[count];
+    for (int i = 0; i < count; i++)
+    {
+
+        time_remaining[i] = burst_time[i];
+    }
+
+    int time_now = 0;
+
+    do
+    {
+
+        bool counter = true;
+
+        for (int i = 0; i < count; i++)
+        {
+
+            if (time_remaining[i] > 0)
+            {
+                // if its greater then 0 we will set counter to false to perform the actions needed to complete the processes
+                counter = false;
+                if (time_remaining[i] > timeQ)
+                {
+                    time_now += timeQ;
+
+                    time_remaining[i] -= timeQ;
+                }
+
+                else
+                {
+                    time_now += time_remaining[i];
+
+                    wait_time[i] = time_now - burst_time[i];
+
+                    //if the process is complete make the time 0
+                    time_remaining[i] = 0;
+                }
+            }
+        }
+
+        //sending the program out of loop because we complete the process send to us
+        if (counter == true)
+            break;
+    } while (true);
+
+    for (int i = 0; i < count; i++)
+    {
+        cout << "Waiting time for " << (i + 1) << " is " << wait_time[i] << endl;
     }
 }
 
@@ -161,12 +243,6 @@ void structSortHandler(processModel *pd, int count, int method)
                 }
             }
         }
-
-        for (int i = 0; i < count - 1; i++)
-        {
-            cout<<pd[i].priority;
-        }
-
     }
 }
 
@@ -332,7 +408,40 @@ int main()
                         // 5)
                         else if (option == 5)
                         {
-                            cout << "\nSelected option " << option;
+                            validate = true;
+                            int timeQ;
+                            do
+                            {
+                                if (validate)
+                                {
+
+                                    cout << "Please enter the Time Quantum \n";
+                                }
+                                cout << "Option> ";
+                                cin >> timeQ;
+                                cout << endl;
+
+                                validate = timeValidator(timeQ);
+
+                                if (!validate)
+                                {
+
+                                    cout << "\nPlease enter the valid Time Quantum \n";
+                                }
+                                else
+                                {
+                                    //store the burst time from struct to simple array
+                                    int burst_time[count];
+                                    int waitTime[count];
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        burst_time[i] = pd[i].burst_time;
+                                    }
+
+                                    RRScontroller(count, burst_time, waitTime, timeQ);
+                                }
+
+                            } while (!validate);
                         }
                     }
 
