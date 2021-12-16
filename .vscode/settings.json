@@ -5,7 +5,9 @@
         "*.tcc": "cpp",
         "iosfwd": "cpp",
         "limits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "fstream": "cpp",
+        "random": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

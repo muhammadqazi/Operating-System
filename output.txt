@@ -1,4 +1,4 @@
-Waiting time for process 2 is 5 ms
-Waiting time for process 3 is 9 ms
-Waiting time for process 4 is 12 ms
-Waiting time for process 5 is 16 ms
+Waiting time for process 2 is 0 ms
+Waiting time for process 3 is 21930 ms
+Waiting time for process 4 is 21930 ms
+Waiting time for process 5 is 1293072266 ms
