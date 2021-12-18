@@ -16,17 +16,18 @@ struct processModel
 };
 
 //store data from file to linked list
-struct Node
+typedef struct Node
 {
+    struct node *prev;
     int process;
     int arrival_time;
     int burst_time;
     int priority;
+    int turnaround_time;
     int waiting_time;
     float average_time;
-
     struct Node *next;
-};
+} NODE;
 
 //validator
 int Validator(int option, int startLimit, int endLimit)
@@ -278,62 +279,40 @@ void SchedulerController(processModel *pd, int count)
     myfile.close();
 }
 
-// void create_insert(Node **p, int no, float at, float bt, float *fr)
-// {
-//     // CREATE NODE
-//     Node *q, *r = *p;
-//     q = (Node *)malloc(sizeof(Node));
-//     q->arrival_time = at;
-//     q->burst_time = bt;
-//     q->rt = *fr - at;
-//     q->pc = *fr + bt;
-//     q->tat = q->pc - at;
-//     q->wt = q->tat - bt;
-//     q->rd = q->tat / bt;
-//     *fr = *fr + bt; // Update First Response for next NODE
-
-//     // INSERT NODE AT END
-//     q->next = NULL;
-//     if (*p == NULL)
-//         *p = q;
-//     else
-//     {
-//         while (r->next != NULL)
-//             r = r->next;
-//         r->next = q;
-//     }
-// }
+//this method will be used to sort the processes according to arrival time
 
 //insert data into the linked list
-void insertController(Node **point, int arrival, int burst, int priority)
+void insertController(NODE **head, int process, int arrival_time, int burst_time, int priority , int turnaround_time)
 {
-    Node *head, *temp = *point;
-    head = (Node *)malloc(sizeof(Node));
 
-    head->arrival_time = arrival;
-    head->burst_time = burst;
-    head->priority = priority;
-
-    head->next = NULL;
-    if (*point == NULL)
-        *point = head;
+    // CREATE NODE
+    NODE *point, *r = *head;
+    point = (NODE *)malloc(sizeof(NODE));
+    point->process = process;
+    point->arrival_time = arrival_time;
+    point->burst_time = burst_time;
+    point->priority = priority;
+    point->turnaround_time = turnaround_time;
+    point->waiting_time = turnaround_time - burst_time;
+    
+    // INSERT NODE AT END
+    point->next = NULL;
+    if (*head == NULL)
+        *head = point;
     else
     {
-        while (temp->next != NULL)
-            temp = temp->next;
-        temp->next = head;
+        while (r->next != NULL)
+            r = r->next;
+        r->next = point;
     }
 }
 
-//print linked list
-void printController(Node *p)
+//display the linked list
+void FCFSController(NODE *p)
 {
-
-    printf("\n\n\nProcess Details:");
     while (p != NULL)
     {
-        cout << p->arrival_time;
-
+        cout << "Waiting time for "<< p->process << " is " << p->waiting_time << " ms" << endl;
         p = p->next;
     }
 }
@@ -342,12 +321,13 @@ void printController(Node *p)
 int main()
 {
 
-    struct Node *head = NULL;
+    NODE *head = NULL;
 
     int i = 0;
     int count;
     int option;
     bool validate = true;
+    int sum = 0;
 
     string data;
     string burst_time, arrival, priority;
@@ -368,6 +348,7 @@ int main()
     //assigning values to structure processModel
     for (i = 0; i < count; i++)
     {
+        
         getline(input, data);
 
         //assigning strings
@@ -389,7 +370,9 @@ int main()
         priorityValue << priority;
         priorityValue >> prior;
 
-        insertController(&head, arrival2, burst, prior);
+        sum += burst;
+        // head = insertController(head, i+1 , arrival2, burst, prior);
+        insertController(&head, i + 1, arrival2, burst, prior , sum);
     }
 
     //Ask user to input method
@@ -452,7 +435,7 @@ int main()
                         else if (option == 2)
                         {
 
-                            printController(head);
+                            FCFSController(head);
 
                             // structSortHandler(pd, count, 1);
 

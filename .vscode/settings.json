@@ -7,7 +7,8 @@
         "limits": "cpp",
         "algorithm": "cpp",
         "fstream": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "sstream": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
