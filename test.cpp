@@ -27,6 +27,7 @@ typedef struct Node
     float average_time;
     struct Node *next;
 } NODE;
+
 NODE *head, *tail = NULL;
 
 //validator
@@ -363,7 +364,6 @@ void sortHandler(int method)
 void insertHandler(NODE **head, int process, int arrival_time, int burst_time, int priority, int turnaround_time)
 {
 
-    // CREATE NODE
     NODE *point, *r = *head;
     point = (NODE *)malloc(sizeof(NODE));
     point->process = process;
@@ -371,7 +371,7 @@ void insertHandler(NODE **head, int process, int arrival_time, int burst_time, i
     point->burst_time = burst_time;
     point->priority = priority;
     point->turnaround_time = turnaround_time;
-    // INSERT NODE AT END
+
     point->next = NULL;
     if (*head == NULL)
         *head = point;
@@ -407,21 +407,20 @@ void outputHandler(NODE *p, int count)
 }
 
 //main
-int main()
+int main(int argc, char *argv[])
 {
-
     int i = 0;
     int count = 0;
     int option;
     bool validate = true;
     int sum = 0;
-
     string data;
     string burst_time, arrival, priority;
-    ifstream input("input.txt");
+    ifstream input(argv[2]);
     ifstream input2;
-    input2.open("input.txt");
+    input2.open(argv[2]);
 
+    
     //To know the length of lines of the file
     //number of lines in file = lenth of the array of struct
 
@@ -533,10 +532,9 @@ int main()
                         else if (option == 3)
                         {
 
-                             calculationController(head, 2);
+                            calculationController(head, 2);
 
                             outputHandler(head, count);
-
 
                             // structSortHandler(pd, count, 2);
 
@@ -556,40 +554,40 @@ int main()
                         // 5)
                         else if (option == 5)
                         {
-                            // validate = true;
-                            // int timeQ;
-                            // do
-                            // {
-                            //     if (validate)
-                            //     {
+                            validate = true;
+                            int timeQ;
+                            do
+                            {
+                                if (validate)
+                                {
 
-                            //         cout << "Please enter the Time Quantum \n";
-                            //     }
-                            //     cout << "Option> ";
-                            //     cin >> timeQ;
-                            //     cout << endl;
+                                    cout << "Please enter the Time Quantum \n";
+                                }
+                                cout << "Option> ";
+                                cin >> timeQ;
+                                cout << endl;
 
-                            //     validate = timeValidator(timeQ);
+                                validate = timeValidator(timeQ);
 
-                            //     if (!validate)
-                            //     {
+                                if (!validate)
+                                {
 
-                            //         cout << "\nPlease enter the valid Time Quantum \n";
-                            //     }
-                            //     else
-                            //     {
-                            //         //store the burst time from struct to simple array
-                            //         int burst_time[count];
-                            //         int waitTime[count];
-                            //         for (int i = 0; i < count; i++)
-                            //         {
-                            //             burst_time[i] = pd[i].burst_time;
-                            //         }
+                                    cout << "\nPlease enter the valid Time Quantum \n";
+                                }
+                                else
+                                {
+                                    //store the burst time from struct to simple array
+                                    int burst_time[count];
+                                    int waitTime[count];
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        // burst_time[i] = pd[i].burst_time;
+                                    }
 
-                            //         RRScontroller(count, burst_time, waitTime, timeQ);
-                            //     }
+                                    RRScontroller(count, burst_time, waitTime, timeQ);
+                                }
 
-                            // } while (!validate);
+                            } while (!validate);
                         }
                     }
 
