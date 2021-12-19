@@ -13,8 +13,11 @@ g++ main.cpp -o main
 ```
 
 ```
-./main
+./main -f input.txt -o output.txt   
 ```
+
+To run the program two flags are required from the user ```-f``` which is for getting input for progran and ```-o``` to store the output result from the program.
+
 
 **Input.txt
 
