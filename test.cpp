@@ -18,7 +18,6 @@ struct processModel
 //store data from file to linked list
 typedef struct Node
 {
-    struct node *prev;
     int process;
     int arrival_time;
     int burst_time;
@@ -28,6 +27,7 @@ typedef struct Node
     float average_time;
     struct Node *next;
 } NODE;
+NODE *head, *tail = NULL;
 
 //validator
 int Validator(int option, int startLimit, int endLimit)
@@ -279,10 +279,88 @@ void SchedulerController(processModel *pd, int count)
     myfile.close();
 }
 
-//this method will be used to sort the processes according to arrival time
+void sortHandler(int method)
+{
+
+    NODE *current = head, *index = NULL;
+
+    int temp, burst, prior;
+
+    if (head == NULL)
+    {
+        return;
+    }
+    else
+    {
+        while (current != NULL)
+        {
+            index = current->next;
+
+            while (index != NULL)
+            {
+                if (method == 1)
+                {
+                    if (current->arrival_time > index->arrival_time)
+                    {
+                        temp = current->arrival_time;
+                        current->arrival_time = index->arrival_time;
+                        index->arrival_time = temp;
+
+                        burst = current->burst_time;
+                        current->burst_time = index->burst_time;
+                        index->burst_time = burst;
+
+                        prior = current->priority;
+                        current->priority = index->priority;
+                        index->priority = prior;
+                    }
+                }
+                else if (method == 2)
+                {
+                    if (current->burst_time > index->burst_time)
+                    {
+
+                        burst = current->burst_time;
+                        current->burst_time = index->burst_time;
+                        index->burst_time = burst;
+
+                        temp = current->arrival_time;
+                        current->arrival_time = index->arrival_time;
+                        index->arrival_time = temp;
+
+                        prior = current->priority;
+                        current->priority = index->priority;
+                        index->priority = prior;
+                    }
+                }
+                else if (method == 3)
+                {
+                    if (current->priority < index->priority)
+                    {
+
+                        prior = current->priority;
+                        current->priority = index->priority;
+                        index->priority = prior;
+
+                        burst = current->burst_time;
+                        current->burst_time = index->burst_time;
+                        index->burst_time = burst;
+
+                        temp = current->arrival_time;
+                        current->arrival_time = index->arrival_time;
+                        index->arrival_time = temp;
+                    }
+                }
+
+                index = index->next;
+            }
+            current = current->next;
+        }
+    }
+}
 
 //insert data into the linked list
-void insertController(NODE **head, int process, int arrival_time, int burst_time, int priority , int turnaround_time)
+void insertHandler(NODE **head, int process, int arrival_time, int burst_time, int priority, int turnaround_time)
 {
 
     // CREATE NODE
@@ -293,8 +371,6 @@ void insertController(NODE **head, int process, int arrival_time, int burst_time
     point->burst_time = burst_time;
     point->priority = priority;
     point->turnaround_time = turnaround_time;
-    point->waiting_time = turnaround_time - burst_time;
-    
     // INSERT NODE AT END
     point->next = NULL;
     if (*head == NULL)
@@ -307,24 +383,35 @@ void insertController(NODE **head, int process, int arrival_time, int burst_time
     }
 }
 
-//display the linked list
-void FCFSController(NODE *p)
+void calculationController(NODE *point, int method)
 {
+    sortHandler(method);
+    while (point != NULL)
+    {
+        point->waiting_time = point->turnaround_time - point->burst_time;
+        point = point->next;
+    }
+}
+
+//display the linked list
+void outputHandler(NODE *p, int count)
+{
+    float totalWaitingTime = 0.0;
     while (p != NULL)
     {
-        cout << "Waiting time for "<< p->process << " is " << p->waiting_time << " ms" << endl;
+        cout << "Waiting time for process " << p->process << " is " << p->waiting_time << endl;
+        totalWaitingTime += p->waiting_time;
         p = p->next;
     }
+    cout << "Average waiting time is " << totalWaitingTime / count;
 }
 
 //main
 int main()
 {
 
-    NODE *head = NULL;
-
     int i = 0;
-    int count;
+    int count = 0;
     int option;
     bool validate = true;
     int sum = 0;
@@ -332,25 +419,24 @@ int main()
     string data;
     string burst_time, arrival, priority;
     ifstream input("input.txt");
-    ifstream input2("input.txt");
+    ifstream input2;
+    input2.open("input.txt");
 
     //To know the length of lines of the file
     //number of lines in file = lenth of the array of struct
 
-    if (!input.eof())
+    while (!input2.eof())
     {
         getline(input2, data);
-        count = data.length();
-    }
 
-    struct processModel pd[count - 1];
+        count++;
+    }
 
     //assigning values to structure processModel
     for (i = 0; i < count; i++)
     {
-        
-        getline(input, data);
 
+        getline(input, data);
         //assigning strings
         burst_time = data[0];
         arrival = data[2];
@@ -372,7 +458,7 @@ int main()
 
         sum += burst;
         // head = insertController(head, i+1 , arrival2, burst, prior);
-        insertController(&head, i + 1, arrival2, burst, prior , sum);
+        insertHandler(&head, i + 1, arrival2, burst, prior, sum);
     }
 
     //Ask user to input method
@@ -435,7 +521,9 @@ int main()
                         else if (option == 2)
                         {
 
-                            FCFSController(head);
+                            calculationController(head, 1);
+
+                            outputHandler(head, count);
 
                             // structSortHandler(pd, count, 1);
 
@@ -445,54 +533,63 @@ int main()
                         else if (option == 3)
                         {
 
-                            structSortHandler(pd, count, 2);
+                             calculationController(head, 2);
 
-                            SchedulerController(pd, count);
+                            outputHandler(head, count);
+
+
+                            // structSortHandler(pd, count, 2);
+
+                            // SchedulerController(pd, count);
                         }
                         // 4)
                         else if (option == 4)
                         {
-                            structSortHandler(pd, count, 3);
 
-                            SchedulerController(pd, count);
+                            calculationController(head, 3);
+
+                            outputHandler(head, count);
+                            // structSortHandler(pd, count, 3);
+
+                            // SchedulerController(pd, count);
                         }
                         // 5)
                         else if (option == 5)
                         {
-                            validate = true;
-                            int timeQ;
-                            do
-                            {
-                                if (validate)
-                                {
+                            // validate = true;
+                            // int timeQ;
+                            // do
+                            // {
+                            //     if (validate)
+                            //     {
 
-                                    cout << "Please enter the Time Quantum \n";
-                                }
-                                cout << "Option> ";
-                                cin >> timeQ;
-                                cout << endl;
+                            //         cout << "Please enter the Time Quantum \n";
+                            //     }
+                            //     cout << "Option> ";
+                            //     cin >> timeQ;
+                            //     cout << endl;
 
-                                validate = timeValidator(timeQ);
+                            //     validate = timeValidator(timeQ);
 
-                                if (!validate)
-                                {
+                            //     if (!validate)
+                            //     {
 
-                                    cout << "\nPlease enter the valid Time Quantum \n";
-                                }
-                                else
-                                {
-                                    //store the burst time from struct to simple array
-                                    int burst_time[count];
-                                    int waitTime[count];
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        burst_time[i] = pd[i].burst_time;
-                                    }
+                            //         cout << "\nPlease enter the valid Time Quantum \n";
+                            //     }
+                            //     else
+                            //     {
+                            //         //store the burst time from struct to simple array
+                            //         int burst_time[count];
+                            //         int waitTime[count];
+                            //         for (int i = 0; i < count; i++)
+                            //         {
+                            //             burst_time[i] = pd[i].burst_time;
+                            //         }
 
-                                    RRScontroller(count, burst_time, waitTime, timeQ);
-                                }
+                            //         RRScontroller(count, burst_time, waitTime, timeQ);
+                            //     }
 
-                            } while (!validate);
+                            // } while (!validate);
                         }
                     }
 
