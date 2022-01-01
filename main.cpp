@@ -133,7 +133,9 @@ void sortHandler(int method)
 }
 
 void RRScontroller(NODE *head, int time_quantum, int count)
-{
+{   
+
+    float total = 0;
 
     //round robin scheduling linked list
     sortHandler(1);
@@ -169,6 +171,7 @@ void RRScontroller(NODE *head, int time_quantum, int count)
                     }
                 }
             }
+            total+=head->waiting_time;
             i++;
             cout << "Waiting time for process " << i << " is " << head->waiting_time << endl;
             head = head->next;
@@ -176,6 +179,8 @@ void RRScontroller(NODE *head, int time_quantum, int count)
         if (counter == true)
             break;
     } while (true);
+
+    cout<<"Average waiting time is "<<total/count;
 }
 
 //insert data into the linked list
@@ -225,6 +230,7 @@ void outputHandler(NODE *p, int count)
     cout << "Average waiting time is " << totalWaitingTime / count;
 }
 
+//Shortest Job First Premtive Mode Algoritham
 void premtiveSJF(NODE *head, int count)
 {
 
@@ -232,6 +238,8 @@ void premtiveSJF(NODE *head, int count)
     int i = 0;
     int complete = 0;
     int time_taken;
+    bool serve = false;
+    float total = 0;
     //sort linked list according to burst_time
     sortHandler(2);
 
@@ -240,289 +248,366 @@ void premtiveSJF(NODE *head, int count)
         while (head != NULL)
         {
 
+            if ((head->arrival_time <= t) && (head->time_remaining > 0))
+            {
+                serve = true;
+            }
+
+            if (serve == false)
+            {
+                t++;
+                continue;
+            }
+            //linked list is sorted so whenever the time will come we will decrease it until it will be zero
             head->time_remaining = head->time_remaining - 1;
 
-
-
-            if(head->time_remaining == 0){
+            if (head->time_remaining == 0)
+            {
                 complete++;
+
+                serve = false;
 
                 time_taken = t + 1;
 
                 head->waiting_time = time_taken - head->burst_time - head->arrival_time;
 
-                
+                cout << "Waiting time for process " << i + 1 << " is " << head->waiting_time << endl;
 
-                cout << "Waiting time for process " << i+1 << " is " << head->waiting_time << endl;
-
+                total += head->waiting_time;
                 i++;
                 head = head->next;
             }
 
             t++;
         }
-        
     }
+    cout << "Average waiting time is " << total / count;
 }
+
+//Priority Scheduling Premtive Mode Algoritham
+void premtivePriorityScheduler(NODE *head, int count)
+{
+
+    int t = 0;
+    int i = 0;
+    int complete = 0;
+    int time_taken;
+    float total = 0;
+    bool serve = false;
+
+    //sort linked list according to burst_time
+    sortHandler(3);
+
+    while (complete != count)
+    {
+        while (head != NULL)
+        {
+
+            if ((head->arrival_time <= t) && (head->time_remaining > 0))
+            {
+                serve = true;
+            }
+
+            if (serve == false)
+            {
+                t++;
+                continue;
+            }
+            //linked list is sorted so whenever the time will come we will decrease it until it will be zero
+            head->time_remaining = head->time_remaining - 1;
+
+            if (head->time_remaining == 0)
+            {
+                complete++;
+
+                serve = false;
+
+                time_taken = t + 1;
+
+                head->waiting_time = time_taken - head->burst_time - head->arrival_time;
+
+                cout << "Waiting time for process " << i + 1 << " is " << head->waiting_time << endl;
+                total += head->waiting_time;
+                i++;
+                head = head->next;
+            }
+
+            t++;
+        }
+    }
+    cout << "Average waiting time is " << total / count;
+}
+
 //main
 int main(int argc, char *argv[])
 {
-    // if (argc < 2)
-    // {
-    //     cout << "Type error: command line arguments missing for input and output file\nPlease read the documentation at https://github.com/muhammadqazi/Operating-System";
-    //     cout << "\n\nType ./main -h for help [*]";
-
-    //     return 1;
-    // }
-    // else if (argc == 2)
-    // {
-    //     if (strcmp(argv[1], "-h") == 0)
-    //     {
-    //         cout << "Commands:\n"
-    //              << endl;
-    //         cout << "-f <input file>\n";
-    //         cout << "-o <output file>\n";
-    //     }
-    // }
-
-    // else
-    // {
-    int i = 0;
-    int count = 0;
-    int chr = 0;
-    int option;
-    bool validate = true;
-    int sum = 0;
-    string data;
-
-    ifstream input("input.txt");
-    ifstream input2;
-    input2.open("input.txt");
-
-    //To know the length of lines of the file
-    //number of lines in file = lenth of the array of struct
-
-    while (!input2.eof())
+    if (argc < 2)
     {
-        getline(input2, data);
+        cout << "Type error: command line arguments missing for input and output file\nPlease read the documentation at https://github.com/muhammadqazi/Operating-System";
+        cout << "\n\nType ./main -h for help [*]";
 
-        count++;
+        return 1;
+    }
+    else if (argc == 2)
+    {
+        if (strcmp(argv[1], "-h") == 0)
+        {
+            cout << "Commands:\n"
+                 << endl;
+            cout << "-f <input file>\n";
+            cout << "-o <output file>\n";
+        }
     }
 
-    //assigning values to structure processModel
-    for (i = 0; i < count; i++)
+    else
     {
-        int counter = 0;
-        string burst_time, arrival, priority;
-        getline(input, data);
-        chr = data.length();
+        int i = 0;
+        int count = 0;
+        int chr = 0;
+        int option;
+        bool validate = true;
+        int sum = 0;
+        string data;
 
-        for (int j = 0; j < chr; j++)
+        ifstream input("input.txt");
+        ifstream input2;
+        input2.open("input.txt");
+
+        //To know the length of lines of the file
+        //number of lines in file = lenth of the array of struct
+
+        while (!input2.eof())
         {
+            getline(input2, data);
 
-            if (data[j] == ':')
-            {
-                counter++;
-                continue;
-            }
-            if (counter == 0)
-            {
-                burst_time += data[j];
-            }
-            if (counter == 1)
-            {
-                arrival += data[j];
-            }
-            if (counter == 2)
-            {
-                priority += data[j];
-            }
+            count++;
         }
 
-        int burst, arrival2, prior;
-
-        stringstream burstTime;
-        burstTime << burst_time;
-        burstTime >> burst;
-
-        stringstream arrivalTime;
-        arrivalTime << arrival;
-        arrivalTime >> arrival2;
-
-        stringstream priorityValue;
-        priorityValue << priority;
-        priorityValue >> prior;
-
-        sum += burst;
-        // head = insertController(head, i+1 , arrival2, burst, prior);
-        insertHandler(&head, i + 1, arrival2, burst, prior, sum);
-    }
-
-    //Ask user to input method
-    do
-    {
-
-        if (validate)
+        //assigning values to structure processModel
+        for (i = 0; i < count; i++)
         {
-            cout << "\nPlease choose from the given options below" << endl;
-        }
+            int counter = 0;
+            string burst_time, arrival, priority;
+            getline(input, data);
+            chr = data.length();
 
-        cout << "\n 1) Scheduling Method (None)" << endl;
-        cout << "\n 2) Preemptive Mode " << endl;
-        cout << "\n 3) Non-Preemptive Mode " << endl;
-        cout << "\n 4) Show Result" << endl;
-        cout << "\n 5) End Program\n"
-             << endl;
-
-        cout << "Option> ";
-
-        cin >> option;
-
-        //validator return false for not valid data
-        validate = Validator(option, 1, 5);
-
-        if (!validate)
-        {
-            cout << "\n Please enter the correct choice" << endl;
-        }
-        else
-        {
-            // 1)
-            if (option == 1)
+            for (int j = 0; j < chr; j++)
             {
-                do
+
+                if (data[j] == ':')
                 {
-                    cout << "\n 1) None: None of scheduling method chosen" << endl;
-                    cout << "\n 2) First Come, First Served Scheduling" << endl;
-                    cout << "\n 3) Shortest-Job-First Scheduling (NON-PREMITIVE)" << endl;
-                    cout << "\n 4) Priority Scheduling (NON-PREMITIVE)" << endl;
-                    cout << "\n 5) Round-Robin Scheduling\n"
-                         << endl;
-
-                    cout << "Option> ";
-
-                    cin >> option;
-
-                    validate = Validator(option, 1, 5);
-                    if (!validate)
-                    {
-                        cout << "\n Please enter the correct choice" << endl;
-                    }
-                    else
-                    {
-                        // 1)
-                        if (option == 1)
-                        {
-                            cout << "\nSelected option " << option;
-                        }
-
-                        // 2)
-                        else if (option == 2)
-                        {
-
-                            calculationController(head, 1);
-
-                            outputHandler(head, count);
-
-                            // structSortHandler(pd, count, 1);
-
-                            // SchedulerController(pd, count);
-                        }
-                        // 3)
-                        else if (option == 3)
-                        {
-
-                            calculationController(head, 2);
-
-                            outputHandler(head, count);
-
-                            // structSortHandler(pd, count, 2);
-
-                            // SchedulerController(pd, count);
-                        }
-                        // 4)
-                        else if (option == 4)
-                        {
-
-                            calculationController(head, 3);
-
-                            outputHandler(head, count);
-                            // structSortHandler(pd, count, 3);
-
-                            // SchedulerController(pd, count);
-                        }
-                        // 5)
-                        else if (option == 5)
-                        {
-                            validate = true;
-                            int timeQ;
-                            do
-                            {
-                                if (validate)
-                                {
-
-                                    cout << "Please enter the Time Quantum \n";
-                                }
-                                cout << "Option> ";
-                                cin >> timeQ;
-                                cout << endl;
-
-                                validate = timeValidator(timeQ);
-
-                                if (!validate)
-                                {
-
-                                    cout << "\nPlease enter the valid Time Quantum \n";
-                                }
-                                else
-                                {
-                                    //store the burst time from struct to simple array
-                                    // int burst_time[count];
-                                    // int waitTime[count];
-                                    // for (int i = 0; i < count; i++)
-                                    // {
-                                    //     // burst_time[i] = pd[i].burst_time;
-                                    // }
-
-                                    RRScontroller(head, timeQ, count);
-                                }
-
-                            } while (!validate);
-                        }
-                    }
-
-                } while (!validate);
+                    counter++;
+                    continue;
+                }
+                //counter = 0 means that we did not detect the first colon
+                if (counter == 0)
+                {
+                    burst_time += data[j];
+                }
+                //when counter is 1 it means we passed the first colom and we detct the first colon
+                if (counter == 1)
+                {
+                    arrival += data[j];
+                }
+                // counter = 2 means we are the the last colon part
+                if (counter == 2)
+                {
+                    priority += data[j];
+                }
             }
 
-            // 2)
-            else if (option == 2)
-            {
-                premtiveSJF(head, count);
-            }
-            // 3)
-            else if (option == 3)
-            {
-                cout << "\nSelected option " << option;
-            }
-            // 4)
-            else if (option == 4)
-            {
-                cout << "\nSelected option " << option;
-            }
-            // 5)
-            else if (option == 5)
-            {
-                cout << "Program is terminated sucessfully";
-                break;
-            }
+            int burst, arrival2, prior;
+
+            stringstream burstTime;
+            burstTime << burst_time;
+            burstTime >> burst;
+
+            stringstream arrivalTime;
+            arrivalTime << arrival;
+            arrivalTime >> arrival2;
+
+            stringstream priorityValue;
+            priorityValue << priority;
+            priorityValue >> prior;
+
+            sum += burst;
+            // head = insertController(head, i+1 , arrival2, burst, prior);
+            insertHandler(&head, i + 1, arrival2, burst, prior, sum);
         }
 
-        //if the data is valid
-        //the validator will send true i will make it false to break the loop
-        //if the validator send false i will make it true to loop again
+        //Ask user to input method
+        do
+        {
 
-    } while (!validate);
-    // }
+            if (validate)
+            {
+                cout << "\nPlease choose from the given options below" << endl;
+            }
+
+            cout << "\n 1) Scheduling Method " << endl;
+            cout << "\n 2) Show Result" << endl;
+            cout << "\n 3) End Program\n"
+                 << endl;
+
+            cout << "Option> ";
+
+            cin >> option;
+
+            //validator return false for not valid data
+            validate = Validator(option, 1, 3);
+
+            if (!validate)
+            {
+                cout << "\n Please enter the correct choice" << endl;
+            }
+            else
+            {
+                // 1)
+                if (option == 1)
+                {
+                    do
+                    {
+                        cout << "\n 1) First Come, First Served Scheduling" << endl;
+                        cout << "\n 2) Shortest-Job-First Scheduling " << endl;
+                        cout << "\n 3) Priority Scheduling " << endl;
+                        cout << "\n 4) Round-Robin Scheduling\n"
+                             << endl;
+
+                        cout << "Option> ";
+
+                        cin >> option;
+
+                        validate = Validator(option, 1, 4);
+                        if (!validate)
+                        {
+                            cout << "\n Please enter the correct choice" << endl;
+                        }
+                        else
+                        {
+                            // 1) FCFS
+                            if (option == 1)
+                            {
+
+                                calculationController(head, 1);
+
+                                outputHandler(head, count);
+                            }
+                            // 2) SJF
+                            else if (option == 2)
+                            {
+
+                                do
+                                {
+                                    cout << "\n 1) Premtive Mode \t";
+                                    cout << " 2) Non-Premtive Mode \n"
+                                         << endl;
+
+                                    cout << "Option> ";
+
+                                    cin >> option;
+
+                                    validate = Validator(option, 1, 2);
+
+                                    if (!validate)
+                                    {
+                                        cout << "\n Please enter the correct choice" << endl;
+                                    }
+
+                                } while (!validate);
+
+                                if (option == 1)
+                                {
+                                    premtiveSJF(head, count);
+                                }
+                                else if (option == 2)
+                                {
+                                    calculationController(head, 2);
+
+                                    outputHandler(head, count);
+                                }
+                            }
+                            // 3) PS
+                            else if (option == 3)
+                            {
+
+                                do
+                                {
+                                    cout << "\n 1) Premtive Mode \t";
+                                    cout << " 2) Non-Premtive Mode \n"
+                                         << endl;
+
+                                    cout << "Option> ";
+
+                                    cin >> option;
+
+                                    validate = Validator(option, 1, 2);
+
+                                } while (!validate);
+
+                                if (option == 1)
+                                {
+                                    premtivePriorityScheduler(head, count);
+                                }
+                                else if (option == 2)
+                                {
+                                    calculationController(head, 3);
+
+                                    outputHandler(head, count);
+                                }
+                            }
+                            // 4) RRS
+                            else if (option == 4)
+                            {
+                                validate = true;
+                                int timeQ;
+                                do
+                                {
+                                    if (validate)
+                                    {
+
+                                        cout << "Please enter the Time Quantum \n";
+                                    }
+                                    cout << "Option> ";
+                                    cin >> timeQ;
+                                    cout << endl;
+
+                                    validate = timeValidator(timeQ);
+
+                                    if (!validate)
+                                    {
+
+                                        cout << "\nPlease enter the valid Time Quantum \n";
+                                    }
+                                    else
+                                    {
+                                        RRScontroller(head, timeQ, count);
+                                    }
+
+                                } while (!validate);
+                            }
+                        }
+
+                    } while (!validate);
+                }
+
+                // 3)
+                else if (option == 2)
+                {
+                    cout << "\nSelected option " << option;
+                }
+                else if (option == 3)
+                {
+                    cout << "Program is terminated sucessfully";
+                    break;
+                }
+            }
+
+            //if the data is valid
+            //the validator will send true i will make it false to break the loop
+            //if the validator send false i will make it true to loop again
+
+        } while (!validate);
+    }
 
     return 0;
 }
