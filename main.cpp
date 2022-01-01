@@ -132,11 +132,12 @@ void sortHandler(int method)
     }
 }
 
-void RRScontroller(NODE *head, int time_quantum, int count)
-{   
+void RRScontroller(NODE *head, int time_quantum, int count, string file)
+{
 
     float total = 0;
-
+    ofstream myfile;
+    myfile.open(file , ios_base::app);
     //round robin scheduling linked list
     sortHandler(1);
 
@@ -144,7 +145,9 @@ void RRScontroller(NODE *head, int time_quantum, int count)
 
     int current_time = 0;
     int i = 0;
-
+    myfile << "Scheduling Method: Robin Round Scheduling Method" << endl;
+    myfile << "Process Waiting Times :\n"
+           << endl;
     do
     {
         bool counter = true;
@@ -160,27 +163,27 @@ void RRScontroller(NODE *head, int time_quantum, int count)
                     current_time = current_time + time_quantum;
 
                     head->time_remaining -= time_quantum;
+                }
+                else
+                {
+                    current_time = current_time + head->time_remaining;
 
-                    if (head->time_remaining < time_quantum)
-                    {
-                        current_time = current_time + head->time_remaining;
+                    head->waiting_time = current_time - head->burst_time;
 
-                        head->waiting_time = current_time - head->burst_time;
-
-                        head->time_remaining = 0;
-                    }
+                    head->time_remaining = 0;
                 }
             }
-            total+=head->waiting_time;
+            total += head->waiting_time;
             i++;
-            cout << "Waiting time for process " << i << " is " << head->waiting_time << endl;
+            myfile << "P" << i << " : " << head->waiting_time << endl;
             head = head->next;
         }
         if (counter == true)
             break;
     } while (true);
 
-    cout<<"Average waiting time is "<<total/count;
+    myfile << "\nAverage waiting time is " << total / count;
+    myfile.close();
 }
 
 //insert data into the linked list
@@ -218,20 +221,43 @@ void calculationController(NODE *point, int method)
 }
 
 //display the linked list
-void outputHandler(NODE *p, int count)
+void outputHandler(NODE *p, int count, string file, int method)
 {
+    ofstream myfile;
+    myfile.open(file , ios_base::app);
+
+    if (method == 1)
+    {
+        myfile << "\nScheduling Method: First Come First Serve" << endl;
+        myfile << "Process Waiting Times :\n"
+               << endl;
+    }
+    else if (method == 2)
+    {
+        myfile << "\nScheduling Method: Shortest Job First ( Non-Premtive Mode )" << endl;
+        myfile << "Process Waiting Times :\n"
+               << endl;
+    }
+    else if (method == 3)
+    {
+        myfile << "\nScheduling Method: Priority Scheduling ( Non-Premtive Mode )" << endl;
+        myfile << "Process Waiting Times :\n"
+               << endl;
+    }
+
     float totalWaitingTime = 0.0;
     while (p != NULL)
     {
-        cout << "Waiting time for process " << p->process << " is " << p->waiting_time << endl;
+        myfile << "P" << p->process << " : " << p->waiting_time << endl;
         totalWaitingTime += p->waiting_time;
         p = p->next;
     }
-    cout << "Average waiting time is " << totalWaitingTime / count;
+    myfile << "\nAverage waiting time is " << totalWaitingTime / count;
+    myfile.close();
 }
 
 //Shortest Job First Premtive Mode Algoritham
-void premtiveSJF(NODE *head, int count)
+void premtiveSJF(NODE *head, int count, string file)
 {
 
     int t = 0;
@@ -240,9 +266,15 @@ void premtiveSJF(NODE *head, int count)
     int time_taken;
     bool serve = false;
     float total = 0;
+
+    ofstream myfile;
+    myfile.open(file , ios_base::app);
+
     //sort linked list according to burst_time
     sortHandler(2);
-
+    myfile << "\nScheduling Method: Shortest Job First ( Premtive-Mode ) " << endl;
+    myfile << "Process Waiting Times :\n"
+           << endl;
     while (complete != count)
     {
         while (head != NULL)
@@ -271,7 +303,7 @@ void premtiveSJF(NODE *head, int count)
 
                 head->waiting_time = time_taken - head->burst_time - head->arrival_time;
 
-                cout << "Waiting time for process " << i + 1 << " is " << head->waiting_time << endl;
+                myfile << "P" << i + 1 << " : " << head->waiting_time << endl;
 
                 total += head->waiting_time;
                 i++;
@@ -281,11 +313,12 @@ void premtiveSJF(NODE *head, int count)
             t++;
         }
     }
-    cout << "Average waiting time is " << total / count;
+    myfile << "\nAverage waiting time is " << total / count;
+    myfile.close();
 }
 
 //Priority Scheduling Premtive Mode Algoritham
-void premtivePriorityScheduler(NODE *head, int count)
+void premtivePriorityScheduler(NODE *head, int count, string file)
 {
 
     int t = 0;
@@ -295,9 +328,14 @@ void premtivePriorityScheduler(NODE *head, int count)
     float total = 0;
     bool serve = false;
 
+    ofstream myfile;
+    myfile.open(file , ios_base::app);
+
     //sort linked list according to burst_time
     sortHandler(3);
-
+    myfile << "\nScheduling Method: Priority Scheduling ( Premtive Mode )" << endl;
+    myfile << "Process Waiting Times :\n"
+           << endl;
     while (complete != count)
     {
         while (head != NULL)
@@ -326,7 +364,7 @@ void premtivePriorityScheduler(NODE *head, int count)
 
                 head->waiting_time = time_taken - head->burst_time - head->arrival_time;
 
-                cout << "Waiting time for process " << i + 1 << " is " << head->waiting_time << endl;
+                myfile << "P" << i + 1 << " : " << head->waiting_time << endl;
                 total += head->waiting_time;
                 i++;
                 head = head->next;
@@ -335,12 +373,14 @@ void premtivePriorityScheduler(NODE *head, int count)
             t++;
         }
     }
-    cout << "Average waiting time is " << total / count;
+    myfile << "\nAverage waiting time is " << total / count;
+    myfile.close();
 }
 
 //main
 int main(int argc, char *argv[])
 {
+
     if (argc < 2)
     {
         cout << "Type error: command line arguments missing for input and output file\nPlease read the documentation at https://github.com/muhammadqazi/Operating-System";
@@ -369,9 +409,9 @@ int main(int argc, char *argv[])
         int sum = 0;
         string data;
 
-        ifstream input("input.txt");
+        ifstream input(argv[2]);
         ifstream input2;
-        input2.open("input.txt");
+        input2.open(argv[2]);
 
         //To know the length of lines of the file
         //number of lines in file = lenth of the array of struct
@@ -490,7 +530,7 @@ int main(int argc, char *argv[])
 
                                 calculationController(head, 1);
 
-                                outputHandler(head, count);
+                                outputHandler(head, count, argv[4], 1);
                             }
                             // 2) SJF
                             else if (option == 2)
@@ -517,13 +557,13 @@ int main(int argc, char *argv[])
 
                                 if (option == 1)
                                 {
-                                    premtiveSJF(head, count);
+                                    premtiveSJF(head, count, argv[4]);
                                 }
                                 else if (option == 2)
                                 {
                                     calculationController(head, 2);
 
-                                    outputHandler(head, count);
+                                    outputHandler(head, count, argv[4], 2);
                                 }
                             }
                             // 3) PS
@@ -546,13 +586,13 @@ int main(int argc, char *argv[])
 
                                 if (option == 1)
                                 {
-                                    premtivePriorityScheduler(head, count);
+                                    premtivePriorityScheduler(head, count, argv[4]);
                                 }
                                 else if (option == 2)
                                 {
                                     calculationController(head, 3);
 
-                                    outputHandler(head, count);
+                                    outputHandler(head, count, argv[4], 3);
                                 }
                             }
                             // 4) RRS
@@ -580,7 +620,7 @@ int main(int argc, char *argv[])
                                     }
                                     else
                                     {
-                                        RRScontroller(head, timeQ, count);
+                                        RRScontroller(head, timeQ, count, argv[4]);
                                     }
 
                                 } while (!validate);
