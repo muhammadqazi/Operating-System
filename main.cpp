@@ -225,6 +225,45 @@ void outputHandler(NODE *p, int count)
     cout << "Average waiting time is " << totalWaitingTime / count;
 }
 
+void premtiveSJF(NODE *head, int count)
+{
+
+    int t = 0;
+    int i = 0;
+    int complete = 0;
+    int time_taken;
+    //sort linked list according to burst_time
+    sortHandler(2);
+
+    while (complete != count)
+    {
+        while (head != NULL)
+        {
+
+            head->time_remaining = head->time_remaining - 1;
+
+
+
+            if(head->time_remaining == 0){
+                complete++;
+
+                time_taken = t + 1;
+
+                head->waiting_time = time_taken - head->burst_time - head->arrival_time;
+
+                
+
+                cout << "Waiting time for process " << i+1 << " is " << head->waiting_time << endl;
+
+                i++;
+                head = head->next;
+            }
+
+            t++;
+        }
+        
+    }
+}
 //main
 int main(int argc, char *argv[])
 {
@@ -458,7 +497,7 @@ int main(int argc, char *argv[])
             // 2)
             else if (option == 2)
             {
-                cout << "\nSelected option " << option;
+                premtiveSJF(head, count);
             }
             // 3)
             else if (option == 3)
@@ -467,6 +506,11 @@ int main(int argc, char *argv[])
             }
             // 4)
             else if (option == 4)
+            {
+                cout << "\nSelected option " << option;
+            }
+            // 5)
+            else if (option == 5)
             {
                 cout << "Program is terminated sucessfully";
                 break;
