@@ -1,4 +1,28 @@
 
+
+Scheduling Method: First Come First Serve
+Process Waiting Times :
+
+P1 : 0
+P2 : 5
+P3 : 9
+P4 : 12
+P5 : 16
+
+Average waiting time is 8.4
+
+Scheduling Method: Shortest Job First ( Premtive-Mode ) 
+Process Waiting Times :
+
+P1 : 2
+P2 : 4
+P3 : 7
+P4 : 12
+P5 : 15
+
+Average waiting time is 8
+
+
 Scheduling Method: Shortest Job First ( Non-Premtive Mode )
 Process Waiting Times :
 
@@ -9,3 +33,37 @@ P4 : 12
 P5 : 14
 
 Average waiting time is 8.4
+
+Scheduling Method: Priority Scheduling ( Premtive Mode )
+Process Waiting Times :
+
+P1 : 0
+P2 : 4
+P3 : 6
+P4 : 12
+P5 : 13
+
+Average waiting time is 7
+
+
+Scheduling Method: Priority Scheduling ( Non-Premtive Mode )
+Process Waiting Times :
+
+P1 : 0
+P2 : 5
+P3 : 8
+P4 : 13
+P5 : 16
+
+Average waiting time is 8.4
+
+Scheduling Method: Robin Round Scheduling Method
+Process Waiting Times :
+
+P1 : 0
+P2 : 4
+P3 : 8
+P4 : 11
+P5 : 15
+
+Average waiting time is 7.6

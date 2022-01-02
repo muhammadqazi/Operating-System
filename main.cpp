@@ -9,7 +9,7 @@
 
 using namespace std;
 
-//store data from file to linked list
+// Linked list node
 typedef struct Node
 {
     int process;
@@ -139,7 +139,7 @@ void RRScontroller(NODE *head, int time_quantum, int count, string file)
 
     float total = 0;
     ofstream myfile;
-    myfile.open(file.c_str() ,  ios_base::app);
+    myfile.open(file.c_str(), ios_base::app);
     //round robin scheduling linked list
     sortHandler(1);
 
@@ -147,7 +147,7 @@ void RRScontroller(NODE *head, int time_quantum, int count, string file)
 
     int current_time = 0;
     int i = 0;
-    myfile << "Scheduling Method: Robin Round Scheduling Method" << endl;
+    myfile << "\nScheduling Method: Robin Round Scheduling Method" << endl;
     myfile << "Process Waiting Times :\n"
            << endl;
     do
@@ -184,7 +184,7 @@ void RRScontroller(NODE *head, int time_quantum, int count, string file)
             break;
     } while (true);
 
-    myfile << "\nAverage waiting time is " << total / count;
+    myfile << "\nAverage waiting time is " << total / count << endl;
     myfile.close();
 }
 
@@ -226,23 +226,23 @@ void calculationController(NODE *point, int method)
 void outputHandler(NODE *p, int count, string file, int method)
 {
     ofstream myfile;
-    myfile.open(file.c_str() ,  ios_base::app);
+    myfile.open(file.c_str(), ios_base::app);
 
     if (method == 1)
     {
-        myfile << "\nScheduling Method: First Come First Serve" << endl;
+        myfile << "\n\nScheduling Method: First Come First Serve" << endl;
         myfile << "Process Waiting Times :\n"
                << endl;
     }
     else if (method == 2)
     {
-        myfile << "\nScheduling Method: Shortest Job First ( Non-Premtive Mode )" << endl;
+        myfile << "\n\nScheduling Method: Shortest Job First ( Non-Premtive Mode )" << endl;
         myfile << "Process Waiting Times :\n"
                << endl;
     }
     else if (method == 3)
     {
-        myfile << "\nScheduling Method: Priority Scheduling ( Non-Premtive Mode )" << endl;
+        myfile << "\n\nScheduling Method: Priority Scheduling ( Non-Premtive Mode )" << endl;
         myfile << "Process Waiting Times :\n"
                << endl;
     }
@@ -254,7 +254,7 @@ void outputHandler(NODE *p, int count, string file, int method)
         totalWaitingTime += p->waiting_time;
         p = p->next;
     }
-    myfile << "\nAverage waiting time is " << totalWaitingTime / count;
+    myfile << "\nAverage waiting time is " << totalWaitingTime / count << endl;
     myfile.close();
 }
 
@@ -270,7 +270,7 @@ void premtiveSJF(NODE *head, int count, string file)
     float total = 0;
 
     ofstream myfile;
-    myfile.open(file.c_str() ,  ios_base::app);
+    myfile.open(file.c_str(), ios_base::app);
 
     //sort linked list according to burst_time
     sortHandler(2);
@@ -315,7 +315,7 @@ void premtiveSJF(NODE *head, int count, string file)
             t++;
         }
     }
-    myfile << "\nAverage waiting time is " << total / count;
+    myfile << "\nAverage waiting time is " << total / count << endl;
     myfile.close();
 }
 
@@ -331,7 +331,7 @@ void premtivePriorityScheduler(NODE *head, int count, string file)
     bool serve = false;
 
     ofstream myfile;
-    myfile.open(file.c_str() ,  ios_base::app);
+    myfile.open(file.c_str(), ios_base::app);
 
     //sort linked list according to burst_time
     sortHandler(3);
@@ -375,7 +375,7 @@ void premtivePriorityScheduler(NODE *head, int count, string file)
             t++;
         }
     }
-    myfile << "\nAverage waiting time is " << total / count;
+    myfile << "\nAverage waiting time is " << total / count << endl;
     myfile.close();
 }
 
@@ -632,11 +632,28 @@ int main(int argc, char *argv[])
                     } while (!validate);
                 }
 
-                // 3)
+                // 2)
                 else if (option == 2)
                 {
-                    cout << "\nSelected option " << option;
+                    string result;
+
+                    ifstream myfile("output.txt");
+
+                    if (myfile.is_open())
+                    {
+                        while (getline(myfile, result))
+                        {
+                            cout << result << '\n';
+                        }
+                        myfile.close();
+                    }
+
+                    else
+                    {
+                        cout << "Unable to open file";
+                    }
                 }
+                // 3)
                 else if (option == 3)
                 {
                     cout << "Program is terminated sucessfully";
