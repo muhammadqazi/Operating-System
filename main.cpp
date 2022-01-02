@@ -637,7 +637,7 @@ int main(int argc, char *argv[])
                 {
                     string result;
 
-                    ifstream myfile("output.txt");
+                    ifstream myfile(argv[4]);
 
                     if (myfile.is_open())
                     {
