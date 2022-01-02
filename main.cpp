@@ -5,6 +5,8 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <stdlib.h>
+
 using namespace std;
 
 //store data from file to linked list
@@ -137,7 +139,7 @@ void RRScontroller(NODE *head, int time_quantum, int count, string file)
 
     float total = 0;
     ofstream myfile;
-    myfile.open(file , ios_base::app);
+    myfile.open(file.c_str() ,  ios_base::app);
     //round robin scheduling linked list
     sortHandler(1);
 
@@ -224,7 +226,7 @@ void calculationController(NODE *point, int method)
 void outputHandler(NODE *p, int count, string file, int method)
 {
     ofstream myfile;
-    myfile.open(file , ios_base::app);
+    myfile.open(file.c_str() ,  ios_base::app);
 
     if (method == 1)
     {
@@ -268,7 +270,7 @@ void premtiveSJF(NODE *head, int count, string file)
     float total = 0;
 
     ofstream myfile;
-    myfile.open(file , ios_base::app);
+    myfile.open(file.c_str() ,  ios_base::app);
 
     //sort linked list according to burst_time
     sortHandler(2);
@@ -329,7 +331,7 @@ void premtivePriorityScheduler(NODE *head, int count, string file)
     bool serve = false;
 
     ofstream myfile;
-    myfile.open(file , ios_base::app);
+    myfile.open(file.c_str() ,  ios_base::app);
 
     //sort linked list according to burst_time
     sortHandler(3);
@@ -384,7 +386,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         cout << "Type error: command line arguments missing for input and output file\nPlease read the documentation at https://github.com/muhammadqazi/Operating-System";
-        cout << "\n\nType ./main -h for help [*]";
+        cout << "\n\nType ./main -h for help [*]\n";
 
         return 1;
     }
