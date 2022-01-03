@@ -110,7 +110,7 @@ void sortHandler(int method)
                 }
                 else if (method == 3) //sort list according to priority
                 {
-                    if (current->priority < index->priority)
+                    if (current->priority > index->priority)
                     {
 
                         prior = current->priority;
